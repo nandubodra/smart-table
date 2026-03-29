@@ -45,7 +45,7 @@ SmartTable/
 
 ## 📸 Preview
 
-(![Preview](assets/images/https://image2url.com/r2/default/files/1774788290373-e6deaec0-3a6f-4008-9131-0a5cb37d8c60.png))
+(![Preview](https://image2url.com/r2/default/files/1774788290373-e6deaec0-3a6f-4008-9131-0a5cb37d8c60.png))
 
 ---
 
