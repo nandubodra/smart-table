@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartTable - Restaurant Ordering System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">
+        <h1>🍽️ SmartTable</h1>
+        <p>Smart Restaurant Ordering</p>
+      </div>
+    </div>
+    
+    <div class="header-center">
+      <div class="table-info">
+        <div class="info-item">
+          <span class="label">🪑 Table</span>
+          <span class="value" id="tableNumber">1</span>
+        </div>
+        <div class="info-item">
+          <span class="label">👥 Guests</span>
+          <span class="value" id="guestCount">2</span>
+        </div>
+        <div class="info-item">
+          <span class="label">⏰ Time</span>
+          <span class="value" id="timeDisplay">00:00</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button class="settings-btn" onclick="openSettings()">⚙️ Settings</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <h3>📂 Categories</h3>
+        <div class="filter-buttons">
+          <button class="filter-btn active" onclick="filterCategory('all')">
+            <span class="icon">🍽️</span>
+            <span>All Items</span>
+          </button>
+          <button class="filter-btn" onclick="filterCategory('appetizers')">
+            <span class="icon">🥒</span>
+            <span>Appetizers</span>
+          </button>
+          <button class="filter-btn" onclick="filterCategory('mains')">
+            <span class="icon">🍛</span>
+            <span>Main Course</span>
+          </button>
+          <button class="filter-btn" onclick="filterCategory('desserts')">
+            <span class="icon">🍰</span>
+            <span>Desserts</span>
+          </button>
+          <button class="filter-btn" onclick="filterCategory('beverages')">
+            <span class="icon">🥤</span>
+            <span>Beverages</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Box -->
+      <div class="search-section">
+        <input 
+          type="text" 
+          id="searchInput" 
+          class="search-box"
+          placeholder="🔍 Search items..."
+          onkeyup="searchItems()"
+        >
+      </div>
+
+      <!-- Promo Box -->
+      <div class="promo-section">
+        <div class="promo-card">
+          <h3>🎉 Special Offers</h3>
+          <p class="promo-text">Get upto 50% OFF</p>
+          <p class="promo-subtext">Use promo codes</p>
+          <button class="promo-btn" onclick="applyPromo()">Apply Code</button>
+        </div>
+      </div>
+
+      <!-- Quick Info -->
+      <div class="quick-info">
+        <div class="info-box">
+          <span class="info-label">Total Items</span>
+          <span class="info-value" id="totalItems">0</span>
+        </div>
+        <div class="info-box">
+          <span class="info-label">Cart Value</span>
+          <span class="info-value">₹<span id="cartValue">0</span></span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Menu Section -->
+    <main class="menu-section">
+      <div class="menu-header">
+        <h2 id="menuTitle">📋 All Items</h2>
+        <div class="view-options">
+          <button class="view-btn active" onclick="setViewMode('grid')">⊞ Grid</button>
+          <button class="view-btn" onclick="setViewMode('list')">≡ List</button>
+        </div>
+      </div>
+
+      <div id="menu" class="menu-grid"></div>
+    </main>
+
+    <!-- Order Panel -->
+    <aside class="order-panel">
+      <!-- Panel Header -->
+      <div class="panel-header">
+        <h3>🛒 Order Summary</h3>
+        <button class="close-panel-btn" onclick="toggleOrderPanel()" title="Close">✕</button>
+      </div>
+
+      <!-- Cart Items -->
+      <div class="cart-wrapper">
+        <div id="cartItems" class="cart-items">
+          <div class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <p class="empty-text">No items added yet</p>
+            <p class="empty-subtext">Add items from the menu</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <!-- Summary Details -->
+        <div class="summary-details">
+          <div class="summary-row">
+            <span class="label">Subtotal</span>
+            <span class="value">₹<span id="subtotal">0</span></span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Discount</span>
+            <span class="value discount">-₹<span id="discount">0</span></span>
+          </div>
+          <div class="summary-row">
+            <span class="label">Tax (10%)</span>
+            <span class="value">₹<span id="tax">0</span></span>
+          </div>
+          <div class="summary-row total-row">
+            <span class="label">💰 Total</span>
+            <span class="value">₹<span id="total">0</span></span>
+          </div>
+        </div>
+
+        <!-- Special Requests -->
+        <div class="special-requests">
+          <textarea 
+            id="specialRequests" 
+            class="requests-input"
+            placeholder="Special requests? (allergies, extra spice, etc.)"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-primary" onclick="payNow()">
+            <span class="btn-icon">💳</span>
+            <span class="btn-text">Pay Now</span>
+          </button>
+          <button class="btn btn-secondary" onclick="callWaiter()">
+            <span class="btn-icon">📞</span>
+            <span class="btn-text">Call Waiter</span>
+          </button>
+          <button class="btn btn-danger" onclick="clearCart()">
+            <span class="btn-icon">🗑️</span>
+            <span class="btn-text">Clear Cart</span>
+          </button>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="payment-methods">
+          <p class="methods-label">Payment Options:</p>
+          <div class="methods-list">
+            <span class="method">💳 UPI</span>
+            <span class="method">💰 Cash</span>
+            <span class="method">🏦 Card</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Notification -->
+<div id="notification" class="notification"></div>
+
+<!-- Modals -->
+<!-- Order Confirmation Modal -->
+<div id="confirmModal" class="modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content modal-confirm">
+    <div class="modal-header">
+      <h2>✅ Order Confirmation</h2>
+      <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="confirmDetails" class="confirm-details"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="confirmOrder()">Confirm Order</button>
+      <button class="btn btn-outline" onclick="closeModal('confirmModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Promo Code Modal -->
+<div id="promoModal" class="modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content modal-promo">
+    <div class="modal-header">
+      <h2>🎉 Promo Codes</h2>
+      <button class="modal-close" onclick="closeModal('promoModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input 
+        type="text" 
+        id="promoCode" 
+        class="promo-input"
+        placeholder="Enter promo code"
+        onkeypress="if(event.key==='Enter') submitPromo()"
+      >
+      <div class="promo-list">
+        <div class="promo-item">
+          <span class="code">WELCOME15</span>
+          <span class="offer">15% OFF</span>
+        </div>
+        <div class="promo-item">
+          <span class="code">SAVE20</span>
+          <span class="offer">20% OFF</span>
+        </div>
+        <div class="promo-item">
+          <span class="code">ENJOY25</span>
+          <span class="offer">25% OFF</span>
+        </div>
+        <div class="promo-item">
+          <span class="code">SPECIAL10</span>
+          <span class="offer">10% OFF</span>
+        </div>
+        <div class="promo-item">
+          <span class="code">FLAT50</span>
+          <span class="offer">50% OFF</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="submitPromo()">Apply Code</button>
+      <button class="btn btn-outline" onclick="closeModal('promoModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div id="settingsModal" class="modal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content modal-settings">
+    <div class="modal-header">
+      <h2>⚙️ Settings</h2>
+      <button class="modal-close" onclick="closeModal('settingsModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-group">
+        <label>Table Number</label>
+        <input type="number" id="settingTable" min="1" max="50" value="1">
+      </div>
+      <div class="settings-group">
+        <label>Number of Guests</label>
+        <input type="number" id="settingGuests" min="1" max="20" value="2">
+      </div>
+      <div class="settings-group">
+        <label>Restaurant Name</label>
+        <input type="text" id="settingRestaurant" value="SmartTable">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+      <button class="btn btn-outline" onclick="closeModal('settingsModal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="style.css">
+<script src="script.js"></script>
+
+</body>
+</html>
